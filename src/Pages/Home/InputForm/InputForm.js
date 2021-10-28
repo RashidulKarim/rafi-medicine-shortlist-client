@@ -16,7 +16,7 @@ const InputForm = () => {
           status: status,
           time: time
       }
-      axios.post('http://localhost:5000/addProduct',{
+      axios.post('https://rafi-server.herokuapp.com/addProduct',{
           productInfo
       })
       .then(res =>{          

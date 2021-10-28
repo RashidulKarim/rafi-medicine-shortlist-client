@@ -9,7 +9,7 @@ const Products = () => {
 
     
     useEffect(()=>{
-        fetch('http://localhost:5000/products')
+        fetch('https://rafi-server.herokuapp.com/products')
         .then(res => res.json())
         .then(data => {
             setProducts(data)
@@ -20,7 +20,7 @@ const Products = () => {
     const deleteProduct = (id) =>{
         const confirm = window.confirm("Do you want to delete?")
         if(confirm === true){
-         fetch(`http://localhost:5000/product/${id}`,{
+         fetch(`https://rafi-server.herokuapp.com/product/${id}`,{
            method: "DELETE"
          })
          .then(res => res.json())
@@ -37,7 +37,7 @@ const Products = () => {
     const updateStatus = (id) =>{
         const confirm = window.confirm("Do you want to update the status?")
         if(confirm === true){
-         fetch(`http://localhost:5000/product/${id}`,{
+         fetch(`https://rafi-server.herokuapp.com/product/${id}`,{
            method: "PUT"
          })
          .then(res => res.json())
@@ -111,7 +111,7 @@ const Products = () => {
         {value:'emergency', label:'Emergency'},
     ]
     const handleChange = (e) =>{
-        fetch(`http://localhost:5000/products/${e.value}`)
+        fetch(`https://rafi-server.herokuapp.com/products/${e.value}`)
         .then(res => res.json())
         .then(data => setProducts(data))
     }

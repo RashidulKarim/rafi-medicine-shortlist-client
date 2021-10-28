@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 
 const LoginForm = ({setLoginUser}) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const name = "Rafi@admin"
-    const password = "rafi@21"
+    const name = process.env.REACT_APP_USERID
+    const password = process.env.REACT_APP_PASS
+    console.log(name, password);
+    
     const onSubmit = data => {
         
         const inputName = data.userId;
