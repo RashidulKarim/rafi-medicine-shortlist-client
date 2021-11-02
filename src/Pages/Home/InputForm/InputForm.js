@@ -1,10 +1,9 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useForm } from "react-hook-form";
 import Select from 'react-select';
 
 const InputForm = ({productsCollection, setProductsCollection}) => {
-    const [products, setProducts] = useState([])
     const  methods  = useForm();
     const {handleSubmit, register, reset, setValue, formState: { errors }} = methods;
     const time = new Date();
@@ -63,12 +62,10 @@ const handleSubmitToDB = () =>{
     //           status: status,
     //           time: time
     //       }   
-        axios.post('http://localhost:5000/addProducts',{
+        axios.post('https://rafi-server.herokuapp.com/addProducts',{
               productsCollection
           })
-          .then(res =>{       
-              console.log(res)
-                 
+          .then(res =>{                        
               if(res.data.insertedIds){
                   alert("Products added Successfully")
                   setProductsCollection([])
