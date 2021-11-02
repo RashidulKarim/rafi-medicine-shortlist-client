@@ -5,7 +5,6 @@ const LoginForm = ({setLoginUser}) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const name = process.env.REACT_APP_USERID
     const password = process.env.REACT_APP_PASS
-    console.log(name, password);
     
     const onSubmit = data => {
         
@@ -23,7 +22,8 @@ const LoginForm = ({setLoginUser}) => {
 
     return (
        <div>
-           <h2 style={{textAlign:'center'}}>Please Login</h2>
+           <h2 style={{textAlign:'center'}}>Welcome To Rafi Medicine Center</h2>
+           <h3 style={{textAlign:'center'}}>Please Login</h3>
             <div className='input-form'>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input className='form-input' placeholder='Your UserId' {...register("userId", { required: true})} />

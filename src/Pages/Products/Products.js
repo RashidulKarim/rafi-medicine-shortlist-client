@@ -62,7 +62,7 @@ const Products = () => {
              col4: (new Date(product.time)).toString().slice(0,25),
              col5: <button className={product.status === "complete"? "done": "pending"}
                     onClick={()=>{updateStatus(product._id)}}
-                    >{product.status.toUpperCase()}</button>,
+                    >{product?.status?.toUpperCase()}</button>,
              col6: <button 
              onClick={()=>{deleteProduct(product._id)}}
              className='delete'
@@ -117,14 +117,19 @@ const Products = () => {
     }
     
       return (
-        <div className='center-align'>
+        <div className='overflow'>
             <h2 style={{textAlign:'center'}}>All Products</h2>
+            <div className='flex'>
             <Select
             onChange={handleChange}
              className='select' 
              options={options}
              />
-           <Table data ={data}></Table>
+            </div>
+             <div className='flex start'>
+             <Table data ={data}></Table>
+             </div>
+           
         </div>
       )
    }

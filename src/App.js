@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Home from './Pages/Home/Home/Home.js';
+import Print from './Pages/Print/Print';
 import Products from './Pages/Products/Products';
 import Footer from './Pages/Shared/Footer/Footer';
 
@@ -13,8 +14,11 @@ function App() {
         <Route exact path='/'>
         <Home></Home>
         </Route>
-        <Route path="/products">
+        <Route path="/productsAdmin">
           <Products></Products>
+        </Route>
+        <Route path="/print">
+          <Print></Print>
         </Route>
       </Switch>
       </div>

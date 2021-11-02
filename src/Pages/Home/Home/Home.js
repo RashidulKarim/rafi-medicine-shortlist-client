@@ -3,10 +3,12 @@ import InputForm from '../InputForm/InputForm';
 import LoginForm from '../LoginForm/LoginForm';
 const Home = () => {
   const [loginUser, setLoginUser] = useState({})
+  const [productsCollection, setProductsCollection] = useState(JSON.parse(localStorage.getItem('products')) || [])    
+    
     return (
         <div>
             {
-                loginUser.userId ? <InputForm></InputForm> : <LoginForm setLoginUser={setLoginUser}></LoginForm>
+                loginUser.userId ? <InputForm productsCollection={productsCollection} setProductsCollection={setProductsCollection}></InputForm> : <LoginForm setLoginUser={setLoginUser}></LoginForm>
             }
         </div>
     );
