@@ -108,3 +108,20 @@
   height: 30px;
   margin: 0 5px;
 }
+.selected{
+  list-style-type: none;
+}
+.selected li{
+  color: red;
+}
+.selected-dev{
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  width: 250px;
+  height: 50px;
+}
+.btn-dev{
+  text-align: center;
+  height: 40px;
+}

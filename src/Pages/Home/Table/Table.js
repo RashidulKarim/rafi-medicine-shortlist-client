@@ -33,28 +33,32 @@ const Table = ({data}) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: ' Name',
+            Header: 'Select',
             accessor: 'col1'
           },
           {
-            Header: 'Company',
+            Header: 'Name',
             accessor: 'col2'
           },
           {
+            Header: 'Company',
+            accessor: 'col3'
+          },
+          {
             Header: 'Quantity',
-            accessor: 'col3', 
+            accessor: 'col4', 
           },
           {
             Header: 'Time',
-            accessor: 'col4' 
-          },
-          {
-            Header: 'Status',
             accessor: 'col5' 
           },
           {
-            Header: 'Delete',
+            Header: 'Status',
             accessor: 'col6' 
+          },
+          {
+            Header: 'Delete',
+            accessor: 'col7' 
           }
         ],
         []

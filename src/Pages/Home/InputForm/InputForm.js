@@ -1,16 +1,25 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import Select from 'react-select';
 
 const InputForm = ({productsCollection, setProductsCollection}) => {
+    const[warning, setWarning] = useState('')
     const  methods  = useForm();
     const {handleSubmit, register, reset, setValue, formState: { errors }} = methods;
     const time = new Date();
     const status = "pending";
 
+    
+    const generateID = ()=> {
+    return Math.random().toString(36).slice(2)
+     }
+ 
     const onSubmit = data => {
+        console.log(data)
+        
         const product = {
+            rId: generateID(),
             name: data.name,
             company:data.company.value,
             quantity: data.quantity,
@@ -53,7 +62,7 @@ const InputForm = ({productsCollection, setProductsCollection}) => {
     //   reset()
     //   setValue("company",'' );
   };
-const handleSubmitToDB = () =>{
+const handleSubmitToDB = (e) =>{
 
     // const productInfo = {
     //           name: data.name,
@@ -62,6 +71,8 @@ const handleSubmitToDB = () =>{
     //           status: status,
     //           time: time
     //       }   
+    e.target.setAttribute('disabled', true)
+    setWarning('Please Wait')
         axios.post('https://rafi-server.herokuapp.com/addProducts',{
               productsCollection
           })
@@ -70,9 +81,13 @@ const handleSubmitToDB = () =>{
                   alert("Products added Successfully")
                   setProductsCollection([])
                   localStorage.removeItem('products')
+                  e.target.setAttribute('disabled', false)
+                  setWarning('')
               }
           }).catch(err => {
               alert("Something wrong. please contact with Rashidul Karim")
+              e.target.setAttribute('disabled', false)
+              setWarning('')
           }
           )
 }
@@ -114,6 +129,14 @@ const options = [
       {value:'others', label:'All Others'},
       {value:'emergency', label:'Emergency'},
   ]
+
+  const deleteProduct = (id) =>{
+    const confirm = window.confirm("Do you want to delete?")
+    if(confirm === true){
+     const remainingProduct = productsCollection.filter(pd => pd.rId !== id)
+     setProductsCollection(remainingProduct)
+     localStorage.setItem('products', JSON.stringify(remainingProduct))
+    }}
     return (
         <div>
             <h2 style={{textAlign:'center'}}>Add Product</h2>
@@ -151,10 +174,13 @@ const options = [
              </div>
              <ul style={{textAlign:'center', listStyle:'none'}}>
            {
-                productsCollection.length>0 &&productsCollection.map((pd, i) => <li key={i}><span style={{width:'10px', display:'inline-block'}}>{i+1}.</span><span style={{width:'170px', display:'inline-block'}}>{pd.name}</span><span style={{width:'90px', display:'inline-block'}}>{pd.company}</span><span style={{width:'20px', display:'inline-block'}}>{pd.quantity}</span></li>)
+                productsCollection.length>0 &&productsCollection.map((pd, i) => <p key={i}><span style={{width:'10px', display:'inline-block'}}>{i+1}.</span><span style={{width:'170px', display:'inline-block'}}>{pd.name}</span><span style={{width:'90px', display:'inline-block'}}>{pd.company}</span><span style={{width:'20px', display:'inline-block'}}>{pd.quantity}</span><button onClick={()=>deleteProduct(pd.rId)}>X</button></p>)
             }
             {
-                productsCollection.length>0 && <input className='button' onClick={handleSubmitToDB}  type="submit" />
+                productsCollection.length>0 && <>
+                <input className='button' onClick={handleSubmitToDB}  type="submit" />
+                <p style={{textAlign:'center', color:'red'}}>{warning? warning: ''}</p>
+                </>
             }
            </ul>
         </div>

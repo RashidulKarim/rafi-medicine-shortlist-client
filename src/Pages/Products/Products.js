@@ -6,6 +6,8 @@ import Table from '../Home/Table/Table';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(JSON.parse(localStorage.getItem("selectProduct")) || []);
+    const [quantity, setQuantity] = useState(0)
 
     
     useEffect(()=>{
@@ -15,6 +17,46 @@ const Products = () => {
             setProducts(data)
         })
     },[])
+    
+    
+    const handleManyDelete = () => {
+      const confirm = window.confirm("Do you want to delete?")
+        if(confirm === true){
+          fetch(`https://rafi-server.herokuapp.com/product`,{
+           method: "DELETE",
+           headers:{
+            'content-type':'application/json'
+           },
+           body:JSON.stringify(selectedProduct)
+         })
+         .then(res => res.json())
+         .then(data => {
+           if(data.deletedCount>0){
+             alert('Successfully deleted')
+             localStorage.removeItem("selectProduct")
+            setSelectedProduct([])
+            window.location.reload()
+            //  const remainingProduct = []
+            //  const rest = products.map((product, i) =>{
+            //    const matchProduct = selectedProduct.find(pd => pd._id === product._id)      
+            //    if(matchProduct){
+                 
+            //    }else{
+            //      remainingProduct.push(product)
+            //    }
+            //    return <p key={i}></p>
+            //  })
+            //  setProducts(remainingProduct)
+            
+           }else{
+             alert("Something wrong, please try again later")
+           }})
+        }
+      
+    }
+        
+   
+        
 
 
     const deleteProduct = (id) =>{
@@ -33,11 +75,22 @@ const Products = () => {
              alert("Something wrong, please try again later")
            }})
         }}
+     
         
+
     const updateStatus = (id) =>{
+      const matchPd = products.find(pd => pd._id === id)
+      const currentStatus = matchPd.status
+      let status = ''
+      if(currentStatus === "pending"){
+        status="complete"
+      }
+      if(currentStatus === "complete"){
+        status="pending"
+      }
         const confirm = window.confirm("Do you want to update the status?")
         if(confirm === true){
-         fetch(`https://rafi-server.herokuapp.com/product/${id}`,{
+         fetch(`https://rafi-server.herokuapp.com/product/${id}?status=${status}`,{
            method: "PUT"
          })
          .then(res => res.json())
@@ -47,23 +100,85 @@ const Products = () => {
              const rest = products.filter(pd => pd._id !== id)
              const match = products.filter(pd => pd._id === id)
              const pd = match[0]
-             pd['status'] = "complete";
-             console.log(pd);
+             if(pd.status === "complete"){
+              pd['status'] = "pending";
+             }
+             if(pd.status === "pending"){
+              pd['status'] = "complete";
+             }
              setProducts([...rest, pd])
            }else{
              alert("Something wrong, please try again later")
            }})
-        }}        
+        }
+      }
+        
+        
+    const updateQuantity = (id) =>{
+      if(quantity>0){
+        const confirm = window.confirm("Do you want to update the status?")
+        if(confirm === true){
+         fetch(`https://rafi-server.herokuapp.com/productQuantity/${id}?quantity=${quantity}`,{
+           method: "PUT"
+         })
+         .then(res => res.json())
+         .then(data => {             
+           if(data.modifiedCount>0){
+             alert('Successfully Updated')
+           }else{
+             alert("Something wrong, please try again later")
+           }})
+        }
+      } 
+      }    
+        
+
+
+        const handleSelect = (e, pd) =>{
+          const lsProduct = JSON.parse(localStorage.getItem("selectProduct"))
+          if(lsProduct){
+            if(e.target.checked === true){
+              lsProduct.push(pd)
+              localStorage.setItem("selectProduct", JSON.stringify(lsProduct))
+              setSelectedProduct(lsProduct)
+            }
+            else if(e.target.checked === false){
+              const rest = lsProduct.filter(product => product._id !== pd._id)
+              localStorage.setItem("selectProduct", JSON.stringify(rest))
+              setSelectedProduct(rest)
+            }
+          }
+          else{
+            const products = [];
+            products.push(pd)
+            localStorage.setItem("selectProduct", JSON.stringify(products))
+            setSelectedProduct(products)
+          }}
+
+        // const selectedMap = selectedProduct.map(pd => {
+        //   return pd._id
+        // })
+
+        // const mapProduct = products.map(pd => {
+        //   const foundProduct = selectedProduct.find(product => product._id === pd._id)
+        //   if(foundProduct){
+        //     pd.checked = true
+        //   }
+        //   return pd
+        // })
+        
      const pd = products?.map(product =>{
+       
          return{
-             col1: product.name,
-             col2: product.company,
-             col3: product.quantity,
-             col4: (new Date(product.time)).toString().slice(0,25),
-             col5: <button className={product.status === "complete"? "done": "pending"}
+             col1: <input type="checkbox" name="" onClick={(e)=>handleSelect(e, product)} />,
+             col2: product.name,
+             col3: product.company,
+             col4: <div><button >{product.quantity}</button><input onChange={(e)=> setQuantity(e.target.value)} id='status' style={{width:'50px'}} type='number'/><button onClick={()=>{updateQuantity(product._id)}}>Update</button></div>,
+             col5: (new Date(product.time)).toString().slice(0,25),
+             col6: <button className={product.status === "complete"? "done": "pending"}
                     onClick={()=>{updateStatus(product._id)}}
                     >{product?.status?.toUpperCase()}</button>,
-             col6: <button 
+             col7: <button 
              onClick={()=>{deleteProduct(product._id)}}
              className='delete'
              ><i className="fas fa-trash"></i></button>,
@@ -119,6 +234,7 @@ const Products = () => {
       return (
         <div className='overflow'>
             <h2 style={{textAlign:'center'}}>All Products</h2>
+            <p style={{textAlign:'center'}}>Number of added product: {products.length}</p>
             <div className='flex'>
             <Select
             onChange={handleChange}
@@ -126,9 +242,20 @@ const Products = () => {
              options={options}
              />
             </div>
+            <p style={{textAlign:'center'}}>number of selected Item : {selectedProduct.length}</p>
+            <div className='selected-dev' style={{overflowY:'scroll', height:"500px"}}>
+               <ul className='selected'>
+               {
+                 selectedProduct?.length>0 && selectedProduct.map(product => <li>{product.name}</li>)
+               }
+               </ul>
+               {selectedProduct?.length>0 && 
+               <div className='btn-dev'><button className='button' onClick={handleManyDelete}>Delete all</button></div>}
+             </div>
              <div className='flex start'>
              <Table data ={data}></Table>
              </div>
+             
            
         </div>
       )
