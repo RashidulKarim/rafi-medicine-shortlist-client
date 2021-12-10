@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 import Table from '../Home/Table/Table';
 
@@ -8,6 +9,7 @@ const Products = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(JSON.parse(localStorage.getItem("selectProduct")) || []);
     const [quantity, setQuantity] = useState(0)
+    const [authorize , setAuthorize] = useState(false)
 
     
     useEffect(()=>{
@@ -230,6 +232,13 @@ const Products = () => {
         .then(res => res.json())
         .then(data => setProducts(data))
     }
+
+    const { register, handleSubmit } = useForm();
+    const onSubmit = (data) => {
+      if(data["userName"] === "rafi@123" && data["password"] === "rafi@321"){
+        setAuthorize(true)
+      }
+    }
     
       return (
         <div className='overflow'>
@@ -253,7 +262,15 @@ const Products = () => {
                <div className='btn-dev'><button className='button' onClick={handleManyDelete}>Delete all</button></div>}
              </div>
              <div className='flex start'>
-             <Table data ={data}></Table>
+             {
+               authorize === false? <div> 
+                 <form onSubmit={handleSubmit(onSubmit)}>
+                      <input {...register("userName")} placeholder="User Name" />
+                      <input type="password" {...register("password")} placeholder="Password" />
+                      <input type="submit" />
+                    </form>
+               </div> : <Table data ={data}></Table>
+             }
              </div>
              
            
