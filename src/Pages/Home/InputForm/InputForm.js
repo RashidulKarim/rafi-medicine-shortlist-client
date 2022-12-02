@@ -48,7 +48,7 @@ const InputForm = ({productsCollection, setProductsCollection}) => {
     //       status: status,
     //       time: time
     //   }
-    //   axios.post('https://rafi-server.herokuapp.com/addProduct',{
+    //   axios.post('https://rafi-medicine-server.onrender.com/addProduct',{
     //       productInfo
     //   })
     //   .then(res =>{          
@@ -73,7 +73,7 @@ const handleSubmitToDB = (e) =>{
     //       }   
     e.target.setAttribute('disabled', true)
     setWarning('Please Wait')
-        axios.post('https://rafi-server.herokuapp.com/addProducts',{
+        axios.post('https://rafi-medicine-server.onrender.com/addProducts',{
               productsCollection
           })
           .then(res =>{                        

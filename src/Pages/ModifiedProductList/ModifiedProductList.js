@@ -5,20 +5,16 @@ const ModifiedProductList = () => {
 
     
     useEffect(()=>{
-        fetch('https://rafi-server.herokuapp.com/products')
+        fetch('https://rafi-medicine-server.onrender.com/products')
         .then(res => res.json())
         .then(data => {
             setProducts(data)
         })
     },[])
     
-    // const modifiedProduct = []
-    const pds = products.filter(pd => {
-        return pd.company === "beximco"  || pd.company ==="aci" || pd.company === "ziska" || pd.company === "opsonin" || pd.company === "incepta" || pd.company === "skf" || pd.company === "drug"|| pd.company === "unihealth" || pd.company === "aristo" || pd.company === "pacifiq" || pd.company === "acme" || pd.company === "ibnsina" || pd.company === "sun" || pd.company === "whitehorse" || pd.company === "orion" || pd.company === "jmi" || pd.company === "general" || pd.company === "becon" || pd.company === "others" || pd.company === "whitehorse"
-    })
-    console.log(pds)
+  
     
-    const totalProduct = pds.filter(pd => pd.status !== "complete")
+    const totalProduct = products.filter(pd => pd.status !== "complete")
     console.log(totalProduct)
     return (
         <div style={{textAlign:'center', marginTop: '15px'}}>
